@@ -1,22 +1,23 @@
-#include <cstdio>
-#include<iostream>
-#include <vector>
-#include <queue>
-#include<cstring>
+/*
+    Md. Saddam Hossain shishir
+    shishir.cse.hstu@gmail.com
+    uva 10004
+*/
+#include<bits/stdc++.h>
 using namespace std;
 #define MAX 1001
 
 int n, e;
-int partition[MAX], visited[MAX];
+int colored[MAX], visited[MAX];
 vector< int > G[MAX];
 
-bool is_bipartite()
+bool is_bicoloredte()
 {
     int i, u, v, start;
     queue< int > Q;
     start = 0; // nodes labeled from 0
     Q.push(start);
-    partition[start] = 1; // 1 left, 2 right
+    colored[start] = 1; // 1 left, 2 right
     visited[start] = 1;
     while(!Q.empty())
     {
@@ -25,11 +26,15 @@ bool is_bipartite()
         for(i=0; i < G[u].size(); i++)
         {
             v = G[u][i];
-            if(partition[u] == partition[v]) return false;
+            if(colored[u] == colored[v]) return false;
             if(visited[v] == 0)
             {
                 visited[v] = 1;
-                partition[v] = 3 - partition[u]; // alter 1 and 2
+
+                if(colored[u]==1)
+                    colored[v] = 2;
+                else
+                    colored[v] = 1;
                 Q.push(v);
             }
         }
@@ -51,9 +56,9 @@ int main()
             G[u].push_back(v);
             G[v].push_back(u);
         }
-        if(is_bipartite()) printf("Yes Bipartit.\n");
-        else printf("NOT Bipartit.\n");
-        memset(partition,0,sizeof partition);
+        if(is_bicoloredte()) printf("BICOLORABLE.\n");
+        else printf("NOT BICOLORABLE.\n");
+        memset(colored,0,sizeof colored);
         memset(visited,0,sizeof visited);
         for(i=0; i<=n; i++)
             G[i].clear();
